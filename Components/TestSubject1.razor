@@ -1,0 +1,36 @@
+﻿
+<h3 class="test">@Name: 
+    <input type="text" value="@Value" @oninput="OnInputAsync" />
+    Number of times Tag parameter is set: @Counter
+</h3>
+
+@code {
+
+    [Parameter]
+    public object Tag {
+        get => _Tag;
+        set { // this setter is used only to count how many times it's been called, in fact should be called once, when the element is first rendered.
+            _Tag = value;
+            Counter++;
+        }
+    }
+
+    [Parameter]
+    public string Value { get; set; } // value of the input element, one-way binding
+
+
+    [Parameter]
+    public string Name { get; set; }
+
+
+    [Parameter]
+    public EventCallback ValueChanged { get; set; }
+
+    public async Task OnInputAsync(ChangeEventArgs eventArgs) { // this calls the event callback
+        await ValueChanged.InvokeAsync(this).ConfigureAwait(false);
+    }
+
+    private int Counter;
+    private object _Tag;
+
+}

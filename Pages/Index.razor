@@ -1,0 +1,17 @@
+﻿@page "/"
+
+<TestSubject Name="Without event handler" Tag="42"  />
+<TestSubject Name="With event handler" Tag="42" Tick="TickHandler" />
+<TestSubject1 Name="No JS" Tag="42" ValueChanged="ValueChangedHandler" />
+
+@code {
+
+    public void TickHandler() {
+        ;
+    }
+
+    public void ValueChangedHandler() {
+        ;
+    }
+
+}

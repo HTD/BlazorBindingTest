@@ -1,0 +1,37 @@
+﻿@inject IJSRuntime Js
+<h3 class="test">@Name: Number of times Tag parameter is set: @Counter</h3>
+@code {
+
+    [Parameter]
+    public object Tag {
+        get => _Tag;
+        set { // this setter is used only to count how many times it's been called, in fact should be called once, when the element is first rendered.
+            _Tag = value;
+            Counter++;
+        }
+    }
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public EventCallback Tick { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender) {
+            // start JavaScript timer to fire event every second, see app.js
+            await Js.InvokeVoidAsync("app", DotNetObjectReference.Create(this));
+        }
+    }
+
+    // This is invoked from JavaScript (see app.js)
+    [JSInvokable]
+    public async Task OnJsTickOccured() {
+        await Tick.InvokeAsync(this).ConfigureAwait(true); // this calls the event callback
+    }
+
+    private int Counter;
+    private object _Tag;
+
+}
